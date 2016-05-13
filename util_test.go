@@ -1,4 +1,4 @@
-package main
+package fastexec
 
 import (
 	"bytes"
@@ -50,7 +50,7 @@ func TestDataChunks(t *testing.T) {
 	for _, c := range testCases {
 		Config.chunks = c.chunks
 		p := make(chan *Job, 100)
-		InitDataChunks(c.args, strings.NewReader(c.data), p)
+		initDataChunks(c.args, strings.NewReader(c.data), p)
 		close(p)
 
 		if len(c.expectedData) != len(p) {
