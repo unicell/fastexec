@@ -6,9 +6,15 @@ go:
   - 1.5.4
   - 1.6.2
 
+env:
+  global:
+  - GO15VENDOREXPERIMENT='1'
+
 before_install:
   - go get github.com/mattn/goveralls
   - go get golang.org/x/tools/cmd/cover
+  - go get github.com/kardianos/govendor
+  - govendor sync
 
 script:
   - go test -v -covermode=count -coverprofile=coverage.out ./
