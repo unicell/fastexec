@@ -9,7 +9,7 @@ import (
 	"github.com/juju/ratelimit"
 )
 
-var pwg, cwg sync.WaitGroup
+var outWg sync.WaitGroup
 var pending, done chan Job
 
 var tb *ratelimit.Bucket
@@ -29,6 +29,7 @@ func Worker(in <-chan Job, out chan<- Job) {
 			continue
 		}
 		out <- j
+		outWg.Add(1)
 	}
 }
 
@@ -36,7 +37,7 @@ func StateMonitor(in <-chan Job) {
 	glog.V(2).Infof("--> state monitor")
 	for j := range in {
 		fmt.Print(string(j.GetResult()))
-		cwg.Done()
+		outWg.Done()
 	}
 }
 
@@ -70,6 +71,6 @@ func StartWorkers() {
 }
 
 func WaitToFinish() {
-	pwg.Wait()
-	cwg.Wait()
+	inWg.Wait()
+	outWg.Wait()
 }

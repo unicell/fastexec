@@ -51,7 +51,7 @@ func (j *ExecJob) execute() error {
 
 // Execute a Job with associated data
 func (j *ExecJob) Execute() error {
-	defer pwg.Done()
+	defer inWg.Done()
 	return j.execute()
 }
 
