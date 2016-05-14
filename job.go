@@ -7,14 +7,20 @@ import (
 	"github.com/golang/glog"
 )
 
+type Job interface {
+	Execute() error
+	GetData() []byte
+	GetResult() []byte
+}
+
 // Job contains boths command and data to apply command on
-type Job struct {
+type ExecJob struct {
 	args   []string
 	data   []byte
 	result []byte
 }
 
-func (j *Job) execute() error {
+func (j *ExecJob) execute() error {
 	glog.V(4).Infof("--> executor - cmd - %s", j.args)
 	glog.V(4).Infof("--> executor - data\n>>\n%s<<\n", string(j.data))
 
@@ -44,7 +50,17 @@ func (j *Job) execute() error {
 }
 
 // Execute a Job with associated data
-func (j *Job) Execute() error {
+func (j *ExecJob) Execute() error {
 	defer pwg.Done()
 	return j.execute()
+}
+
+// Get input data from a Job
+func (j ExecJob) GetData() []byte {
+	return j.data
+}
+
+// Get output result from a Job
+func (j ExecJob) GetResult() []byte {
+	return j.result
 }

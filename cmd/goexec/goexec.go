@@ -8,7 +8,9 @@ import (
 
 func main() {
 	fastexec.InitFlags()
+
 	fastexec.StartWorkers()
-	fastexec.InitDataChunks(os.Stdin)
+	fastexec.InitJobPool(os.Stdin)
+
 	fastexec.WaitToFinish()
 }

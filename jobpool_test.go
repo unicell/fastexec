@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDataChunks(t *testing.T) {
+func TestJobPool(t *testing.T) {
 	testCases := []struct {
 		args         []string
 		data         string
@@ -49,8 +49,8 @@ func TestDataChunks(t *testing.T) {
 
 	for _, c := range testCases {
 		Config.chunks = c.chunks
-		p := make(chan *Job, 100)
-		initDataChunks(c.args, strings.NewReader(c.data), p)
+		p := make(chan Job, 100)
+		initJobPool(c.args, strings.NewReader(c.data), p)
 		close(p)
 
 		if len(c.expectedData) != len(p) {
@@ -59,8 +59,8 @@ func TestDataChunks(t *testing.T) {
 
 		i := 0
 		for j := range p {
-			if !bytes.Equal(c.expectedData[i], j.data) {
-				t.Errorf("Content of data chunks didn't match:\n\t%v\n\t%v", string(c.expectedData[i]), string(j.data))
+			if !bytes.Equal(c.expectedData[i], j.GetData()) {
+				t.Errorf("Content of data chunks didn't match:\n\t%v\n\t%v", string(c.expectedData[i]), string(j.GetData()))
 			}
 			i++
 		}

@@ -5,15 +5,15 @@ import (
 	"testing"
 )
 
-func TestExecute(t *testing.T) {
+func TestExecJobs(t *testing.T) {
 	testCases := []struct {
 		about    string
-		job      Job
+		job      ExecJob
 		expected []byte
 	}{
 		{
 			about: "simple cat",
-			job: Job{
+			job: ExecJob{
 				args: []string{"cat"},
 				data: []byte("A\n"),
 			},
@@ -21,7 +21,7 @@ func TestExecute(t *testing.T) {
 		},
 		{
 			about: "sort with argucment",
-			job: Job{
+			job: ExecJob{
 				args: []string{"sort", "-n"},
 				data: []byte("101\n102\n999\n-9\n"),
 			},
@@ -34,8 +34,8 @@ func TestExecute(t *testing.T) {
 		if err != nil {
 			t.Errorf("testcase: %s, got error %v", c.about, err)
 		}
-		if !bytes.Equal(c.expected, c.job.result) {
-			t.Errorf("testcase: %s, expected %v got %v", c.about, c.expected, c.job.result)
+		if !bytes.Equal(c.expected, c.job.GetResult()) {
+			t.Errorf("testcase: %s, expected %v got %v", c.about, c.expected, c.job.GetResult())
 		}
 	}
 }

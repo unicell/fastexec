@@ -8,15 +8,16 @@ import (
 	"github.com/golang/glog"
 )
 
-func AddNewJob(job *Job, pending chan<- *Job) {
+func addJob(job Job, pending chan<- Job) {
 	glog.V(2).Infof("--> data - submitting chunk...")
-	glog.V(4).Infof("\n>\n%s<\n", string(job.data))
+	glog.V(4).Infof("\n>\n%s<\n", string(job.GetData()))
 	pwg.Add(1)
 	cwg.Add(1)
+
 	pending <- job
 }
 
-func initDataChunks(args []string, r io.Reader, pending chan *Job) {
+func initJobPool(args []string, r io.Reader, pending chan Job) {
 	glog.V(2).Infof("--> args - %s", args)
 	count := 0
 	scanner := bufio.NewScanner(r)
@@ -24,7 +25,8 @@ func initDataChunks(args []string, r io.Reader, pending chan *Job) {
 	for i := 0; scanner.Scan(); i++ {
 		if i%Config.chunks == 0 {
 			if buf != nil {
-				AddNewJob(&Job{args: args, data: buf.Bytes()}, pending)
+				j := &ExecJob{args: args, data: buf.Bytes()}
+				addJob(j, pending)
 				count++
 			}
 			buf = new(bytes.Buffer)
@@ -37,12 +39,13 @@ func initDataChunks(args []string, r io.Reader, pending chan *Job) {
 
 	// handling last chunk
 	if buf != nil {
-		AddNewJob(&Job{args: args, data: buf.Bytes()}, pending)
+		j := &ExecJob{args: args, data: buf.Bytes()}
+		addJob(j, pending)
 		count++
 	}
 }
 
-// init data pool by reading from reader input and break it into chunks
-func InitDataChunks(r io.Reader) {
-	initDataChunks(Config.args, r, pending)
+// init job pool by reading from reader input and break it into chunks
+func InitJobPool(r io.Reader) {
+	initJobPool(Config.args, r, pending)
 }
