@@ -11,6 +11,7 @@ import (
 func addJob(job Job, pending chan<- Job) {
 	glog.V(2).Infof("--> data - submitting chunk...")
 	glog.V(4).Infof("\n>\n%s<\n", string(job.GetData()))
+
 	pwg.Add(1)
 	cwg.Add(1)
 
