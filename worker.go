@@ -28,8 +28,8 @@ func Worker(in <-chan Job, out chan<- Job) {
 			glog.Errorf("Error executing %v", err)
 			continue
 		}
-		out <- j
 		outWg.Add(1)
+		out <- j
 	}
 }
 

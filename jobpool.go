@@ -15,8 +15,8 @@ func addJob(job Job, pending chan<- Job) {
 	glog.V(2).Infof("--> data - submitting chunk...")
 	glog.V(4).Infof("\n>\n%s<\n", string(job.GetData()))
 
-	pending <- job
 	inWg.Add(1)
+	pending <- job
 }
 
 func initJobPool(args []string, r io.Reader, pending chan Job) {
