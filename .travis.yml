@@ -21,9 +21,9 @@ script:
   - "$GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_REPO_TOKEN"
 
 before_deploy:
-  - cd cmd/goexec
-  - GOOS=linux GOARCH=amd64 go build -o goexec_linux_amd64
-  - GOOS=darwin GOARCH=amd64 go build -o goexec_darwin_amd64
+  - cd cmd/fastexec
+  - GOOS=linux GOARCH=amd64 go build -o fastexec_linux_amd64
+  - GOOS=darwin GOARCH=amd64 go build -o fastexec_darwin_amd64
 
 deploy:
   skip_cleanup: true
@@ -31,8 +31,8 @@ deploy:
   api_key:
     secure: 5Hc2R2hLP+aiTZF3zQGss//qdWoyevr/XFrNBfBv/Wj+WcOAtXPmY/MqAzt9Z8hV6BlWwXbGCNSGD57zjIQoXPlVZhmu+bEi1CaQ4pH5av3m4VBhOPZAaTIO9OWJuzxCGNwqQjrQnEJzWPt56ew81U1t1TjN0yXLaXB8wnvZcZ17BUkWGmp8FrOw3DkKwaS/lbaiAhF+3D/Nea0PDeWtDOIUoOTvXdMp8CSs+qpozGJRpvlD1LWFmQtMLvzVJ82h7RMn7ajeHVfX7FXrrgWl2gnsZ3MS3ivF8vvyggbOJdxl9zvlAUzkBwOAubcQCdOqMoXMZtATYiM3KEoCX6oCZtYtg+CM0EcvKaYz3DW4jIlTJ+e5fx10nYaEin/q+ryiZY61F8Pf1zthT+Pzu4Ew/aOCfxHq0wTDNs0PSE3F+VfbaU9P4Ei8DpamcV5QQFDQ3QHKpKBnXkifA5aMNScirUMD4/6T2/zpTxOsUUXjRA87W51uf7alr84k255XQNEy7L95toMTKmOSlY+aVs5CQjKtPKUcFWrtP2SDfi8v0aqxUEq4Lt3j1eC0NyTKhQjPAFCrkeDkRuqN2RwN6l8KFoMt7/kkHidV6YzQ0ZibKPeK3phJ6LlmV3E9OD1x87/KsL3KSNBtPJE+bhqhPQ1MSrAirL6uL32tEyhEJs3X5Lc=
   file:
-  - goexec_linux_amd64
-  - goexec_darwin_amd64
+  - fastexec_linux_amd64
+  - fastexec_darwin_amd64
   on:
     tags: true
 
