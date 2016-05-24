@@ -2,6 +2,7 @@ package fastexec
 
 import (
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
@@ -37,6 +38,7 @@ func StateMonitor(in <-chan Job) {
 	glog.V(2).Infof("--> state monitor")
 	for j := range in {
 		fmt.Print(string(j.GetResult()))
+		fmt.Fprintf(os.Stderr, string(j.GetErr()))
 		outWg.Done()
 	}
 }

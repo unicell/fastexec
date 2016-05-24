@@ -41,6 +41,7 @@ func TestExecJobs(t *testing.T) {
 			err:      &os.PathError{"write", "|1", errors.New("bad file descriptor")},
 			expected: []byte(""),
 		},
+		// TODO(qiuyu): stderr test
 	}
 
 	for _, c := range testCases {

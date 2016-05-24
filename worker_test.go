@@ -28,6 +28,11 @@ func (j FakeJob) GetResult() []byte {
 	return j.data
 }
 
+// Get err result from a Job
+func (j FakeJob) GetErr() []byte {
+	return j.data
+}
+
 func TestWorker(t *testing.T) {
 	testCases := []struct {
 		about    string

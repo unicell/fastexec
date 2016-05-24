@@ -11,6 +11,7 @@ type Job interface {
 	Execute() error
 	GetData() []byte
 	GetResult() []byte
+	GetErr() []byte
 }
 
 // Job contains boths command and data to apply command on
@@ -18,6 +19,7 @@ type ExecJob struct {
 	args   []string
 	data   []byte
 	result []byte
+	err    []byte
 }
 
 func (j *ExecJob) execute() error {
@@ -27,6 +29,7 @@ func (j *ExecJob) execute() error {
 	cmd := exec.Command(j.args[0], j.args[1:]...)
 	cmdIn, _ := cmd.StdinPipe()
 	cmdOut, _ := cmd.StdoutPipe()
+	cmdErr, _ := cmd.StderrPipe()
 
 	cmd.Start()
 	_, err := cmdIn.Write(j.data)
@@ -36,15 +39,18 @@ func (j *ExecJob) execute() error {
 	}
 	cmdIn.Close()
 
-	cmdBytes, err := ioutil.ReadAll(cmdOut)
+	cmdOutBytes, err := ioutil.ReadAll(cmdOut)
+	cmdErrBytes, err := ioutil.ReadAll(cmdErr)
 	cmd.Wait()
 	if err != nil {
 		glog.Errorf("Error reading from pipe %v", err)
 		return err
 	}
 
-	j.result = cmdBytes
-	glog.V(4).Infof("--> executor - result\n>>\n%s<<\n", string(cmdBytes))
+	j.result = cmdOutBytes
+	j.err = cmdErrBytes
+	glog.V(4).Infof("--> executor - result\n>>\n%s<<\n", string(cmdOutBytes))
+	glog.V(4).Infof("--> executor - result - err\n>>\n%s<<\n", string(cmdErrBytes))
 
 	return nil
 }
@@ -63,4 +69,9 @@ func (j ExecJob) GetData() []byte {
 // Get output result from a Job
 func (j ExecJob) GetResult() []byte {
 	return j.result
+}
+
+// Get err result from a Job
+func (j ExecJob) GetErr() []byte {
+	return j.err
 }
