@@ -4,6 +4,3 @@
 *.un~
 Session.vim
 .netrwhist
-
-# vendor source
-vendor/*/
